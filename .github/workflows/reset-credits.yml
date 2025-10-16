@@ -52,18 +52,14 @@ jobs:
                     # 使用容错机制，即使某个账户失败也继续处理下一个
                     echo "发送重置请求到: https://www.88code.org/api/reset-credits/$ACCOUNT_ID"
                     
-                    RESPONSE=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST 'https://www.88code.org/api/reset-credits/'$ACCOUNT_ID \
+                    RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST 'https://www.88code.org/api/reset-credits/'$ACCOUNT_ID \
                       -H 'Authorization: Bearer '${API_KEY} \
                       -H 'Content-Type: application/json' \
                       -d '{}')
-                    
-                    HTTP_CODE=$(echo "$RESPONSE" | grep "HTTP_CODE:" | cut -d: -f2)
-                    BODY=$(echo "$RESPONSE" | sed '/HTTP_CODE:/d')
-                    
+                    HTTP_CODE="$RESPONSE"
                     echo "响应状态码: $HTTP_CODE"
-                    echo "响应内容: $BODY"
                     
-                    if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "201" ]; then
+                    if [ "$HTTP_CODE" = "200" ]; then
                       echo "✅ 账户 $ACCOUNT_ID 额度重置成功"
                       SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
                     else
