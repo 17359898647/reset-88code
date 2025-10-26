@@ -87,7 +87,7 @@ func (c *HTTPClient) ResetAllCredits(subscriptions []ActiveSubscription) Stats {
 }
 
 // ResetAt18 handles reset logic at 18:30 Beijing time
-// Rule: Only reset if resetTimes >= 1
+// Rule: Only reset subscriptions with resetTimes=2 and currentCredits < 50% of creditLimit
 func (c *HTTPClient) ResetAt18(subscriptions []ActiveSubscription) Stats {
 	stats := Stats{
 		Total: len(subscriptions),
@@ -116,11 +116,11 @@ func (c *HTTPClient) ResetAt18(subscriptions []ActiveSubscription) Stats {
 	log.Printf("分类完成 - 重置次数 0: %d 个, 1: %d 个, 2: %d 个",
 		len(resetTimes0), len(resetTimes1), len(resetTimes2))
 
-	// Step 2: Filter resetTimes2 subscriptions that need reset (currentCredits <= 20% of creditLimit)
+	// Step 2: Filter resetTimes2 subscriptions that need reset (currentCredits < 50% of creditLimit)
 	var needReset []ActiveSubscription
 	for _, sub := range resetTimes2 {
 		usageRate := sub.CurrentCredits / sub.CreditLimit
-		if usageRate <= 0.2 {
+		if usageRate < 0.5 {
 			needReset = append(needReset, sub)
 			log.Printf("  订阅 ID %d 需要重置 (当前额度: %.2f, 总额度: %.0f, 使用率: %.1f%%)",
 				sub.ID, sub.CurrentCredits, sub.CreditLimit, usageRate*100)
