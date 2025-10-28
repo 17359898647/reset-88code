@@ -3,7 +3,7 @@ name: 88code 每日重置额度 (Go版本)
 on:
     schedule:
         # 每天10:30 UTC时间执行 (北京时间18:30)
-        - cron: "30 10 * * *"
+        - cron: "40 10 * * *"
         # 每天15:45 UTC时间执行 (北京时间23:45)
         - cron: "45 15 * * *"
     workflow_dispatch: # 允许手动触发
