@@ -120,11 +120,9 @@ func (c *HTTPClient) ResetAt18(subscriptions []ActiveSubscription) Stats {
 	var needReset []ActiveSubscription
 	for _, sub := range resetTimes2 {
 		usageRate := sub.CurrentCredits / sub.CreditLimit
-		if usageRate < 0.5 {
-			needReset = append(needReset, sub)
-			log.Printf("  订阅 ID %d 需要重置 (当前额度: %.2f, 总额度: %.0f, 使用率: %.1f%%)",
-				sub.ID, sub.CurrentCredits, sub.CreditLimit, usageRate*100)
-		}
+		needReset = append(needReset, sub)
+		log.Printf("  订阅 ID %d 需要重置 (当前额度: %.2f, 总额度: %.0f, 使用率: %.1f%%)",
+			sub.ID, sub.CurrentCredits, sub.CreditLimit, usageRate*100)
 	}
 
 	if len(needReset) == 0 {
