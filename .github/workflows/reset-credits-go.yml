@@ -16,6 +16,14 @@ jobs:
             - name: Checkout 代码
               uses: actions/checkout@v4
 
+            - name: Setup Go
+              uses: actions/setup-go@v5
+              with:
+                  go-version: "1.21"
+
+            - name: Build
+              run: go build -o bin/main .
+
             - name: 重置88code额度
               env:
                   TOKEN: ${{ secrets.TOKEN }}
